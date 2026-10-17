@@ -4,13 +4,15 @@ SHRINK RUN - game files for Poki and CrazyGames
 poki/index.html          the Poki version
 crazygames/index.html    the CrazyGames version
 
-Each one is a single self-contained file: the game, three.js, the fonts and all
-sound are inside it. The only thing it loads from the internet is that portal's
-own SDK script (the portals require this).
+Each folder is a multi-file build: index.html, style.css, js/ (three.js, save code, game code),
+fonts/ (woff2) and audio/ (FLAC, fetched when the player first taps). The only thing loaded from
+the internet is that portal's own SDK script (the portals require this).
 
 TO UPLOAD
-- Open the folder for the portal, select index.html, and zip it so that
-  index.html sits at the top level of the zip (not inside another folder).
+- Open the folder for the portal, select everything inside it (index.html, style.css, js, fonts,
+  audio) and zip it so that index.html sits at the top level of the zip (not inside another folder).
+- Audio is loaded with fetch(), so test through a local web server or the portal Inspector, not by
+  double-clicking index.html.
 - Poki: upload the zip in Poki for Developers and test it in the Inspector.
   On phones Poki draws a small menu button at the top; the game moves its top
   menu over to make room, so check that in the Inspector.
