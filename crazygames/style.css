@@ -292,7 +292,12 @@ kbd{font:700 13px/1 'Figtree',system-ui,sans-serif;border:1.5px solid currentCol
 button:focus-visible{outline:3px solid #3A1F0B;outline-offset:3px}
 .panel button:focus-visible,.card button:focus-visible{outline-color:var(--ink)}
 
+/* title screen: sit lower, with the text links packed close together */
+#titleScreen{padding-top:calc(20px + 80px)}
+#titleScreen .link-btn{margin-top:0;padding:3px 2px}
+#titleScreen #tutBtn{margin-top:12px}
 @media (max-width:760px){
+  #titleScreen{padding-top:calc(86px + var(--ui-top))}
   .screen{justify-content:space-between;align-items:center;text-align:center;padding:calc(56px + var(--ui-top)) 18px 22px}
   .title-block{display:contents}
   .logo{margin:0}

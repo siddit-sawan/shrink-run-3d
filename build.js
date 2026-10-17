@@ -1,4 +1,4 @@
-// Builds dist/poki.zip and dist/crazygames.zip (index.html at the top level of each zip).
+// Builds dist/poki.zip and dist/crazygames.zip, plus unzipped dist/poki/ and dist/crazygames/ (index.html at the top level of each zip).
 // Usage: node build.js
 const fs = require('fs'), path = require('path'), { execFileSync } = require('child_process');
 
@@ -15,6 +15,10 @@ for (const portal of portals) {
   for (const e of entries) {
     if (!fs.existsSync(path.join(src, e))) throw new Error(`${portal}/${e} is missing`);
   }
+  // unzipped copy for local testing, always replaced so it never goes stale
+  const out = path.join(dist, portal);
+  fs.rmSync(out, { recursive: true, force: true });
+  for (const e of entries) fs.cpSync(path.join(src, e), path.join(out, e), { recursive: true });
   const zip = path.join(dist, `${portal}.zip`);
   fs.rmSync(zip, { force: true });
   // bsdtar (Windows, macOS) writes zips with -a; other systems use the zip command
