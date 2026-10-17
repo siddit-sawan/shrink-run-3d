@@ -4709,6 +4709,15 @@
   $('resumeBtn').addEventListener('click', resume);
   $('pauseBtn').addEventListener('click', () => { state === 'pause' ? resume() : pause(); });
   addEventListener('resize', resize);
+  // the UI is scaled down (see --ui-scale in style.css) whenever the game is not fullscreen
+  const syncFullscreen = () => {
+    const fs = !!document.fullscreenElement || matchMedia('(display-mode: fullscreen)').matches ||
+      (innerWidth >= screen.width - 1 && innerHeight >= screen.height - 1);
+    document.documentElement.classList.toggle('fs', fs);
+  };
+  addEventListener('resize', syncFullscreen);
+  document.addEventListener('fullscreenchange', syncFullscreen);
+  syncFullscreen();
 
   // ================= opening =================
   resize();
