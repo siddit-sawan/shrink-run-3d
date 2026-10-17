@@ -392,9 +392,9 @@
     if (adOffer.runs < AD_EVERY_RUNS || Date.now() - adOffer.last < AD_MIN_GAP_MS) return;
     setTimeout(() => { if (state === 'over' && !adBusy && $('rewardPop').hidden) showRewardPop(); }, 1400);
   }
-  function showRewardPop() {
+  function showRewardPop(coinsOnly) {
     adOffer.runs = 0; adOffer.last = Date.now(); adOffer.claimed = false;
-    const r = adOffer.reward = Math.random() < 0.7 ? { kind: 'coins', amt: AD_COINS } : { kind: 'lucky', amt: 1 };
+    const r = adOffer.reward = coinsOnly || Math.random() < 0.7 ? { kind: 'coins', amt: AD_COINS } : { kind: 'lucky', amt: 1 };
     const big = $('rewardBig'); big.innerHTML = '';
     if (r.kind === 'coins') { const c = document.createElement('span'); c.className = 'coin-ico'; big.append(c, document.createTextNode('+' + fmt(r.amt) + ' coins')); }
     else big.textContent = '1 free Lucky Spin';
@@ -424,6 +424,9 @@
     });
   });
   $('rewardNo').addEventListener('click', () => { if (!adBusy) $('rewardPop').hidden = true; });
+  // a button on the title screen so the player can always choose to watch a rewarded ad
+  $('adCoinsBtn').hidden = !Portal.rewardedAvailable();
+  $('adCoinsBtn').addEventListener('click', () => { if (!adBusy && $('rewardPop').hidden) showRewardPop(true); });
   // keep the page from scrolling or jumping when playing inside a portal page
   addEventListener('keydown', ev => {
     const tag = ev.target && ev.target.tagName;
