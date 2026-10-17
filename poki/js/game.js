@@ -69,14 +69,14 @@
   ];
   const RARITY = {
     starter:   { label: 'Starter',   color: '#FFE2B8', chance: 0 },
-    common:    { label: 'Common',    color: '#C9D0D8', chance: 0.40495, refund: 200 },   // whatever is left after every other tier, so the total is exactly 100%
+    common:    { label: 'Common',    color: '#C9D0D8', chance: 0.4,     refund: 200 },   // whatever is left after every other tier, so the total is exactly 100%
     rare:      { label: 'Rare',      color: '#7FB2FF', chance: 0.27,  refund: 300 },
     epic:      { label: 'Epic',      color: '#C99BFF', chance: 0.18,  refund: 500 },
     legendary: { label: 'Legendary', color: '#FFC94A', chance: 0.07,   refund: 1000 },
     mythic:    { label: 'Mythic',    color: '#FF6FD8', chance: 0.045,  refund: 1800 },
     celestial: { label: 'Celestial', color: '#8FF3FF', chance: 0.015,  refund: 2500 },
     divine:    { label: 'Divine',    color: '#FFE8A3', chance: 0.015,  refund: 5000 },
-    eternal:   { label: 'Eternal',   color: '#FFFFFF', bg: 'linear-gradient(90deg,#FF5C5C,#FFD25C,#5CFF8A,#5CC8FF,#C85CFF)', chance: 0.00005, refund: 20000 }, // 0.005%
+    eternal:   { label: 'Eternal',   color: '#FFFFFF', bg: 'linear-gradient(90deg,#FF5C5C,#FFD25C,#5CFF8A,#5CC8FF,#C85CFF)', chance: 0.005, refund: 20000 }, // 0.5%
   };
   const rarityBg = k => RARITY[k].bg || RARITY[k].color;
   // the stated odds (45/29/20/7/5/1.5/1.5) add up to 109%, so they're scaled down to fit 100% while keeping the same ratios
@@ -3789,8 +3789,8 @@
     gachaGlow.position.set(0, 1.1 + rigLift, 0);
     beam.position.set(0, 6.5, 0);
   }
-  const LUCKY_ODDS = { eternal: 0.00005, divine: 0.03, celestial: 0.10, mythic: 0.15, legendary: 0.32, epic: 0.30, rare: 0.10, common: 0 };
-  const ULTRA_ODDS = { eternal: 0.001, divine: 0.12, celestial: 0.879 };   // an Ultra Lucky Spin is always above Mythic
+  const LUCKY_ODDS = { eternal: 0.005, divine: 0.03, celestial: 0.10, mythic: 0.15, legendary: 0.32, epic: 0.30, rare: 0.095, common: 0 };
+  const ULTRA_ODDS = { eternal: 0.0167, divine: 0.12, celestial: 0.8633 };   // an Ultra Lucky Spin is always above Mythic
   function rollRarity(usePity, mode) {
     if (mode === true) mode = 'lucky';
     if (usePity && (save.divinePity || 0) >= DIVINE_PITY - 1) return 'divine';
