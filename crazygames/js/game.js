@@ -319,11 +319,12 @@
     let pokiReady = null, cgReady = null, accountP = null;
     function init() {
       if (PORTAL === 'poki' && pokiSdk() && typeof pokiSdk().init === 'function') { try { pokiReady = window.__POKI_INIT || Promise.resolve(pokiSdk().init()).then(() => true, () => true); } catch (e) { pokiReady = Promise.resolve(true); } }
-      if (PORTAL === 'crazygames' && cgSdk() && typeof cgSdk().init === 'function') { try { cgReady = window.__CG_INIT || Promise.resolve(cgSdk().init()).then(() => true, () => false); } catch (e) { cgReady = Promise.resolve(false); } }
+      if (PORTAL === 'crazygames' && cgSdk() && typeof cgSdk().init === 'function') { try { cgReady = window.__CG_INIT || Promise.resolve(cgSdk().init()).then(() => true, () => false); } catch (e) { cgReady = Promise.resolve(false); } cgReady = cgReady.then(ok => { console.log('[portal] CrazyGames SDK ready:', ok); return ok; }); }
     }
     const poki = fn => { if (pokiReady) pokiReady.then(() => { try { fn(pokiSdk()); } catch (e) {} }); };
     const cg = fn => { if (cgReady) cgReady.then(ok => { if (ok) { try { fn(cgSdk()); } catch (e) {} } }); };
     init();
+    if (PORTAL === 'crazygames' && !cgReady) console.warn('[portal] CrazyGames SDK script was not found on the page (blocked, or failed to load)');
     return {
       name: PORTAL,
       loadingStart() { if (PORTAL === 'crazygames') cg(sdk => sdk.game.loadingStart()); },
@@ -355,7 +356,7 @@
           let done = false; const end = () => { if (done) return; done = true; clearTimeout(safety); Snd.adMute(false); resolve(); };
           const safety = setTimeout(end, 60000);
           if (PORTAL === 'poki' && pokiReady) pokiReady.then(() => { try { Promise.resolve(pokiSdk().commercialBreak(() => Snd.adMute(true))).then(end, end); } catch (e) { end(); } });
-          else if (PORTAL === 'crazygames' && cgReady) cgReady.then(ok => { if (!ok || !cgSdk().ad) return end(); try { cgSdk().ad.requestAd('midgame', { adStarted: () => Snd.adMute(true), adFinished: end, adError: end }); } catch (e) { end(); } });
+          else if (PORTAL === 'crazygames' && cgReady) cgReady.then(ok => { if (!ok || !cgSdk().ad) return end(); try { console.log('[portal] requestAd midgame'); cgSdk().ad.requestAd('midgame', { adStarted: () => Snd.adMute(true), adFinished: end, adError: e => { console.log('[portal] midgame ad error:', e); end(); } }); } catch (e) { end(); } });
           else if (PORTAL === 'demo') demoAd(DEMO_MID_MS, false).then(end);
           else end();
         });
@@ -366,7 +367,7 @@
           let done = false; const end = ok => { if (done) return; done = true; clearTimeout(safety); Snd.adMute(false); resolve(!!ok); };
           const safety = setTimeout(() => end(false), 120000);
           if (PORTAL === 'poki' && pokiReady) pokiReady.then(() => { try { Promise.resolve(pokiSdk().rewardedBreak({ size: 'medium', onStart: () => Snd.adMute(true) })).then(ok => end(ok), () => end(false)); } catch (e) { end(false); } });
-          else if (PORTAL === 'crazygames' && cgReady) cgReady.then(ok => { if (!ok || !cgSdk().ad) return end(false); try { cgSdk().ad.requestAd('rewarded', { adStarted: () => Snd.adMute(true), adFinished: () => end(true), adError: () => end(false) }); } catch (e) { end(false); } });
+          else if (PORTAL === 'crazygames' && cgReady) cgReady.then(ok => { if (!ok || !cgSdk().ad) return end(false); try { console.log('[portal] requestAd rewarded'); cgSdk().ad.requestAd('rewarded', { adStarted: () => Snd.adMute(true), adFinished: () => end(true), adError: e => { console.log('[portal] rewarded ad error:', e); end(false); } }); } catch (e) { end(false); } });
           else if (PORTAL === 'demo') demoAd(DEMO_REWARD_MS, true).then(end);
           else end(false);
         });
