@@ -4138,7 +4138,7 @@
         if (s.position.x > 6) s.position.x = -6;
         if (s.position.x < -6) s.position.x = 6;
       }
-      if (o.z >= 0 && o.z - o.len <= 0 && p.level > ATOMIC && p.level < MEGA && !(p.turbo > 0 || p.light > 0) && !o.beaten && !qte) {
+      if (o.z >= 0 && o.z - o.len <= 0 && p.level > ATOMIC && p.level < MEGA && !(p.turbo > 0 || p.light > 0) && !o.beaten && !qte && !runnerHas('wisp')) {
         const f = o.s * Math.pow(1 / p.s, 1.4) * (p.onGround ? 0.6 : 1) * (runnerHas('anchor') ? 0.5 : 1) * fx.wind * diffForce
           * (p.level <= ATOMIC + 2 ? 1.6 : 1) // the two tiniest sizes get blown away almost instantly
           * (runnerHas('eclipse') ? 0.3 : 1) * (perks.has('cape') ? 0.8 : 1);
@@ -4155,11 +4155,13 @@
       for (const db of o.debris) { db.a += db.sp * dt; db.m.position.set(Math.cos(db.a) * db.r, db.y, Math.sin(db.a) * db.r); db.m.rotation.x += dt * 3; }
       const tall = heightAt(p.level) > HURRICANE_MIN_H && p.level < MEGA;
       if (tall && o.z >= 0 && o.z - o.len <= 0 && !(p.turbo > 0 || p.light > 0) && !o.beaten && !qte) {
-        const dir = Math.sin(clock * 1.7 + o.ph) >= 0 ? 1 : -1; // gusts flip back and forth
-        const f = 5.4 * diffForce * (p.onGround ? 0.75 : 1) * (runnerHas('anchor') ? 0.5 : 1) * (runnerHas('eclipse') ? 0.3 : 1);
-        p.x += dir * f * dt;
-        p.lastPush = 'hurricane';
-        if (Math.abs(p.x) > TRACK_HALF - 0.02 && !o.qteDone) startQte(o, 'hurricane');
+        if (!runnerHas('wisp')) { // Wisp: the hurricane's winds never push it
+          const dir = Math.sin(clock * 1.7 + o.ph) >= 0 ? 1 : -1; // gusts flip back and forth
+          const f = 5.4 * diffForce * (p.onGround ? 0.75 : 1) * (runnerHas('anchor') ? 0.5 : 1) * (runnerHas('eclipse') ? 0.3 : 1);
+          p.x += dir * f * dt;
+          p.lastPush = 'hurricane';
+          if (Math.abs(p.x) > TRACK_HALF - 0.02 && !o.qteDone) startQte(o, 'hurricane');
+        }
         if (!o.hit && Math.abs(fz) < 1.0 && Math.abs(p.x - o.funnel.position.x) < 0.9 + hw) hit(o);
       }
     }
@@ -4191,7 +4193,7 @@
       if (!p.onGround && p.vy < -8) p.squash = Math.min(0.25, -p.vy / 70);
       p.y = floor; p.vy = 0; p.onGround = true; p.coyote = 0.09; p.jumps = 0;
     } else p.onGround = false;
-    if (!onTrack && p.y < -0.4 && !['wisp', 'ascendant'].some(runnerHas)) {
+    if (!onTrack && p.y < -0.4 && !runnerHas('ascendant')) {
       if (runnerHas('nova') && !p.novaUsed) { p.x = 0; p.vx = 0; p.y = 2.5; p.vy = 0; supernova(); }
       else { die('fell'); return; }
     }
