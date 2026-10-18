@@ -19,7 +19,7 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-:root{--ui-top:28px;--ui-scale:1.4;--ui-scale-fs:1.6;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--ui-top:28px;--ui-scale:1.2;--ui-scale-fs:1.4;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
 body{
   margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);
